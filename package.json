@@ -1,0 +1,25 @@
+{
+  "name": "hedera",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hashgraph/sdk": "^2.19.2",
+    "@ledgerhq/hw-app-btc": "^10.0.0",
+    "@ledgerhq/hw-app-eth": "^6.32.0",
+    "@ledgerhq/hw-transport-webhid": "^6.27.12",
+    "@ledgerhq/logs": "^6.10.1",
+    "@openzeppelin/contracts": "^4.8.2",
+    "core-js": "^3.29.1",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
