@@ -67,15 +67,17 @@ contract ManufacturerContract is ERC20, AccessControl {
         return (pendingUpdates);
     }
 
-    function implementUpdate(
-        address _id
-    ) public view returns (uint256, uint256, address, address) {
+    function implementUpdate()
+        public
+        view
+        returns (uint256, uint256, address, address)
+    {
         require(hasRole(IMPLEMENT_UPDATE, msg.sender), _errorMessage);
         return (
-            myDirectory[_id].checksum,
-            myDirectory[_id].loc.minerId,
-            myDirectory[_id].loc.CID,
-            myDirectory[_id].loc.userAddress
+            myDirectory[msg.sender].checksum,
+            myDirectory[msg.sender].loc.minerId,
+            myDirectory[msg.sender].loc.CID,
+            myDirectory[msg.sender].loc.userAddress
         );
     }
 

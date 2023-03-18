@@ -13,13 +13,17 @@
     "@hashgraph/sdk": "^2.19.2",
     "@ledgerhq/hw-app-btc": "^10.0.0",
     "@ledgerhq/hw-app-eth": "^6.32.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.27.12",
     "@ledgerhq/hw-transport-webhid": "^6.27.12",
     "@ledgerhq/logs": "^6.10.1",
     "@openzeppelin/contracts": "^4.8.2",
+    "babel-polyfill": "^6.26.0",
+    "browserify": "^17.0.0",
     "core-js": "^3.29.1",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
+    "electron": "^23.1.4",
     "parcel": "^2.8.3"
   }
 }
