@@ -34,7 +34,9 @@ var fluide = (function () {
         target.insertBefore(node, anchor || null);
     }
     function detach(node) {
-        node.parentNode.removeChild(node);
+        if (node.parentNode) {
+            node.parentNode.removeChild(node);
+        }
     }
     function element(name) {
         return document.createElement(name);
@@ -67,9 +69,9 @@ var fluide = (function () {
 
     const dirty_components = [];
     const binding_callbacks = [];
-    const render_callbacks = [];
+    let render_callbacks = [];
     const flush_callbacks = [];
-    const resolved_promise = Promise.resolve();
+    const resolved_promise = /* @__PURE__ */ Promise.resolve();
     let update_scheduled = false;
     function schedule_update() {
         if (!update_scheduled) {
@@ -101,15 +103,29 @@ var fluide = (function () {
     const seen_callbacks = new Set();
     let flushidx = 0; // Do *not* move this inside the flush() function
     function flush() {
+        // Do not reenter flush while dirty components are updated, as this can
+        // result in an infinite loop. Instead, let the inner flush handle it.
+        // Reentrancy is ok afterwards for bindings etc.
+        if (flushidx !== 0) {
+            return;
+        }
         const saved_component = current_component;
         do {
             // first, call beforeUpdate functions
             // and update components
-            while (flushidx < dirty_components.length) {
-                const component = dirty_components[flushidx];
-                flushidx++;
-                set_current_component(component);
-                update(component.$$);
+            try {
+                while (flushidx < dirty_components.length) {
+                    const component = dirty_components[flushidx];
+                    flushidx++;
+                    set_current_component(component);
+                    update(component.$$);
+                }
+            }
+            catch (e) {
+                // reset dirty state to not end up in a deadlocked state and then rethrow
+                dirty_components.length = 0;
+                flushidx = 0;
+                throw e;
             }
             set_current_component(null);
             dirty_components.length = 0;
@@ -146,6 +162,16 @@ var fluide = (function () {
             $$.after_update.forEach(add_render_callback);
         }
     }
+    /**
+     * Useful for example to execute remaining `afterUpdate` callbacks before executing `destroy`.
+     */
+    function flush_render_callbacks(fns) {
+        const filtered = [];
+        const targets = [];
+        render_callbacks.forEach((c) => fns.indexOf(c) === -1 ? filtered.push(c) : targets.push(c));
+        targets.forEach((c) => c());
+        render_callbacks = filtered;
+    }
     const outroing = new Set();
     function transition_in(block, local) {
         if (block && block.i) {
@@ -154,14 +180,17 @@ var fluide = (function () {
         }
     }
     function mount_component(component, target, anchor, customElement) {
-        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        const { fragment, after_update } = component.$$;
         fragment && fragment.m(target, anchor);
         if (!customElement) {
             // onMount happens before the initial afterUpdate
             add_render_callback(() => {
-                const new_on_destroy = on_mount.map(run).filter(is_function);
-                if (on_destroy) {
-                    on_destroy.push(...new_on_destroy);
+                const new_on_destroy = component.$$.on_mount.map(run).filter(is_function);
+                // if the component was destroyed immediately
+                // it will update the `$$.on_destroy` reference to `null`.
+                // the destructured on_destroy may still reference to the old array
+                if (component.$$.on_destroy) {
+                    component.$$.on_destroy.push(...new_on_destroy);
                 }
                 else {
                     // Edge case - component was destroyed immediately,
@@ -176,6 +205,7 @@ var fluide = (function () {
     function destroy_component(component, detaching) {
         const $$ = component.$$;
         if ($$.fragment !== null) {
+            flush_render_callbacks($$.after_update);
             run_all($$.on_destroy);
             $$.fragment && $$.fragment.d(detaching);
             // TODO null out other refs, including component.$$ (but need to
@@ -197,7 +227,7 @@ var fluide = (function () {
         set_current_component(component);
         const $$ = component.$$ = {
             fragment: null,
-            ctx: null,
+            ctx: [],
             // state
             props,
             update: noop,
@@ -262,6 +292,9 @@ var fluide = (function () {
             this.$destroy = noop;
         }
         $on(type, callback) {
+            if (!is_function(callback)) {
+                return noop;
+            }
             const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
             callbacks.push(callback);
             return () => {
@@ -280,7 +313,7 @@ var fluide = (function () {
     }
 
     function dispatch_dev(type, detail) {
-        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.50.0' }, detail), { bubbles: true }));
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.57.0' }, detail), { bubbles: true }));
     }
     function append_dev(target, node) {
         dispatch_dev('SvelteDOMInsert', { target, node });
@@ -335,7 +368,7 @@ var fluide = (function () {
         $inject_state() { }
     }
 
-    /* src\frontend\App.svelte generated by Svelte v3.50.0 */
+    /* src\frontend\App.svelte generated by Svelte v3.57.0 */
 
     const file = "src\\frontend\\App.svelte";
 
@@ -364,13 +397,13 @@ var fluide = (function () {
     			a = element("a");
     			a.textContent = "Svelte tutorial";
     			t6 = text(" to learn how to build Svelte apps.");
-    			attr_dev(h1, "class", "svelte-1e9puaw");
-    			add_location(h1, file, 26, 2, 376);
+    			attr_dev(h1, "class", "svelte-ykz7x8");
+    			add_location(h1, file, 27, 2, 378);
     			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 27, 15, 415);
-    			add_location(p, file, 27, 2, 402);
-    			attr_dev(main, "class", "svelte-1e9puaw");
-    			add_location(main, file, 25, 0, 366);
+    			add_location(a, file, 28, 15, 417);
+    			add_location(p, file, 28, 2, 404);
+    			attr_dev(main, "class", "svelte-ykz7x8");
+    			add_location(main, file, 26, 0, 368);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -412,6 +445,13 @@ var fluide = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
     	let { name } = $$props;
+
+    	$$self.$$.on_mount.push(function () {
+    		if (name === undefined && !('name' in $$props || $$self.$$.bound[$$self.$$.props['name']])) {
+    			console.warn("<App> was created without expected prop 'name'");
+    		}
+    	});
+
     	const writable_props = ['name'];
 
     	Object.keys($$props).forEach(key => {
@@ -446,13 +486,6 @@ var fluide = (function () {
     			options,
     			id: create_fragment.name
     		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*name*/ ctx[0] === undefined && !('name' in props)) {
-    			console.warn("<App> was created without expected prop 'name'");
-    		}
     	}
 
     	get name() {

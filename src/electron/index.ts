@@ -51,6 +51,7 @@ const createWindow = () => {
   });
 };
 
+
 app.on("ready", createWindow);
 
 // those two events are completely optional to subscrbe to, but that's a common way to get the
