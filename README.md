@@ -1,92 +1,107 @@
-# electron-svelte-typescript
+# This repo is no longer maintained. Consider using `npm init vite` and selecting the `svelte` option or — if you want a full-fledged app framework — use [SvelteKit](https://kit.svelte.dev), the official application framework for Svelte.
 
-Template for apps written with [Electron](https://github.com/electron/electron), [Svelte](https://github.com/sveltejs/svelte) and [Typescript](https://github.com/microsoft/TypeScript).
+---
 
-The template does hot module replacement and reloads electron on main process file changes out of the box.
-It also follows some good security practices, such as Content-Security-Policy meta tags in html,
-context isolation set to true, remote modules set to false etc.
+# svelte app
 
-## Get started
+This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
 
-To create a new project based on this template you must first clone the repo and then delete the folder .git:
+To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
 
 ```bash
-git clone https://github.com/fuzzc0re/electron-svelte-typescript MyAppName
-cd MyAppName
-rm -rf .git
+npx degit sveltejs/template svelte-app
+cd svelte-app
 ```
 
-_Note that you will need to have [Node.js](https://nodejs.org) installed._
+*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+
+
+## Get started
 
 Install the dependencies...
 
 ```bash
-npm i
+cd svelte-app
+npm install
 ```
 
-...then start coding in dev mode:
+...then start [Rollup](https://rollupjs.org):
 
 ```bash
-npm start
+npm run dev
 ```
 
-The start script spins up [Rollup](https://github.com/rollup/rollup)
-in watch mode with a [Rollup-Plugin-Serve](https://github.com/thgh/rollup-plugin-serve) instance
-serving the frontend static files on [localhost:5000](http://localhost:5000) and a
-nodemon server to watch for file changes related to the main electron process.
+Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
 
-Electron loads its html content from [localhost:5000](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/src/electron/index.ts#L40)
-in dev mode and from [build/public/index.html](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/src/electron/index.ts#L38)
-in production mode.
+By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
 
-The Svelte development happens in [src/frontend](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/src/frontend) and the Electron development in [src/electron](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/src/electron).
-
-Edit a file in `src`, save it, and see the changes in the app.
+If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
 
 ## Building and running in production mode
 
-To create an optimized build of the app:
+To create an optimised version of the app:
 
 ```bash
 npm run build
 ```
 
-To create a distributable version of the app with [electron-builder](https://github.com/electron-userland/electron-builder):
+You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
 
-```bash
-npm run dist
+
+## Single-page app mode
+
+By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
+
+If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
+
+```js
+"start": "sirv public --single"
 ```
 
-In production mode, sourcemaps are [disabled](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/scripts/preBuild.js#L30),
-[html](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/scripts/postBuild.js#L77)
-[css](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/scripts/postBuild.js#L104) and
-[js](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/rollup.config.js#L83) files are compressed and mangled, devTools are [disabled](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/src/electron/index.ts#L28) and
-[CSP](https://github.com/fuzzc0re/electron-svelte-typescript-boilerplate/scripts/postBuild.js#L82) allows only same origin scripts to load.
+## Using TypeScript
 
-## Contributing
-
-In order to lint the code you run:
+This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
 
 ```bash
-npm run lint
+node scripts/setupTypeScript.js
 ```
 
-In order to prettify the code you run:
+Or remove the script via:
 
 ```bash
-npm run format
+rm scripts/setupTypeScript.js
 ```
 
-You should run the following command, which runs lint and then format, on your contributed code:
+If you want to use `baseUrl` or `path` aliases within your `tsconfig`, you need to set up `@rollup/plugin-alias` to tell Rollup to resolve the aliases. For more info, see [this StackOverflow question](https://stackoverflow.com/questions/63427935/setup-tsconfig-path-in-svelte).
+
+## Deploying to the web
+
+### With [Vercel](https://vercel.com)
+
+Install `vercel` if you haven't already:
 
 ```bash
-npm run preversion
+npm install -g vercel
 ```
 
-before creating a pull request.
+Then, from within your project folder:
 
-All suggestions are welcome!
+```bash
+cd public
+vercel deploy --name my-project
+```
 
-## Licence
+### With [surge](https://surge.sh/)
 
-This project is licensed under the terms described in [LICENSE](https://github.com/fuzzc0re/electron-svelte-typescript/blob/master/LICENSE).
+Install `surge` if you haven't already:
+
+```bash
+npm install -g surge
+```
+
+Then, from within your project folder:
+
+```bash
+npm run build
+surge public my-project.surge.sh
+```

@@ -1,0 +1,9 @@
+{
+	"/": [
+		"src/routes/+layout.js",
+		"src/routes/+layout.js"
+	],
+	"/api/upload": [
+		"src/routes/api/upload/+server.ts"
+	]
+}
