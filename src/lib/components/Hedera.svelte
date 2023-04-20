@@ -1,8 +1,31 @@
 <script lang="ts">
   import { LedgerHardwareWallet } from "./hardware-ledger";
+  import type { Wallet } from "./ledgerabstract";
+  import { walletstores } from "./wallet-stores";
+  // import connected from "./Ledger.svelte";
+  import wallet from "./Ledger.svelte";
+  import Ledger from "./Ledger.svelte";
+
+  import {
+    AccountId,
+    PrivateKey,
+    Client,
+    FileCreateTransaction,
+    ContractCreateTransaction,
+    ContractFunctionParameters,
+    ContractExecuteTransaction,
+    ContractCallQuery,
+    Hbar,
+    ContractCreateFlow,
+    PublicKey,
+  } from "@hashgraph/sdk";
+
+  import fs from "fs";
+
   export let updateVersion = "";
   export let device = "";
   export let smartContract = "";
+
   let smartContractDict = [
     {
       name: "OEM 1",
@@ -32,13 +55,41 @@
     },
   ];
 
-  function handleSubmit() {
+  let ledgerWallet: Wallet; // This command works but constantly print stuff to the console
+  // Call the walletstore subscrriber to get wallet
+  const unsubscribeWallet = walletstores.subscribe((store) => {
+    ledgerWallet = store.wallet;
+  });
+
+  let client: Client;
+  const unsubscribeClient = walletstores.subscribe((store) => {
+    client = store.client;
+  });
+
+  async function handleSubmit() {
     console.log("submit");
     console.log(smartContract);
     console.log(device);
     console.log(updateVersion);
-    // TODO: Call smart contract to schedule update
-    
+    const pubKey = ledgerWallet.getPublicKey(0);
+    console.log(pubKey);
+    const signer = ledgerWallet.getTransactionSigner(0);
+    // Test Contract <- Not actual contract
+    const contractByteCode = fs.readFileSync(
+      "../SmartContracts/LookupContract_sol_LookupContract.bin"
+    );
+    const manufacturerContractInstantiateTx = new ContractCreateFlow()
+      .setBytecode(contractByteCode)
+      .setGas(1000000)
+      .setConstructorParameters(new ContractFunctionParameters());
+    const manufacturerContractInstantiateSubmit =
+      await manufacturerContractInstantiateTx.executeWithSigner(signer);
+    const manufacturerContractInstantiateRx =
+      await manufacturerContractInstantiateSubmit.getReceiptWithSigner(signer);
+    const manufacturerContractId = manufacturerContractInstantiateRx.contractId;
+    console.log(
+      `- The manufacturer smart contract ID is: ${manufacturerContractId} \n`
+    );
   }
 </script>
 
@@ -59,10 +110,7 @@
   <div class="mt-4">
     <label for="update" class="mr-4">Device:</label>
 
-    <select
-      bind:value={device}
-      on:change={() => (updateVersion = "")}
-    >
+    <select bind:value={device} on:change={() => (updateVersion = "")}>
       {#each deviceDict as d}
         <option value={d.publicKey}>
           {d.name}
@@ -73,15 +121,13 @@
   <div class="mt-4">
     <label for="update" class="mr-4">Update:</label>
 
-    <select
-    bind:value={updateVersion}
-  >
-    {#each updateDict as update}
-      <option value={update.id}>
-        {update.name}
-      </option>
-    {/each}
-  </select>
+    <select bind:value={updateVersion}>
+      {#each updateDict as update}
+        <option value={update.id}>
+          {update.name}
+        </option>
+      {/each}
+    </select>
   </div>
 
   <!-- Enter -->

@@ -32,6 +32,18 @@ interface TransportStatusError extends Error {
 	statusText: string;
 }
 
+interface storeMethods {
+	publicKey: (ind: number) => PublicKey | null;
+	privateKey: () => PrivateKey | null;
+	accountId: () => AccountId | null;
+	getClient: () => SimpleHederaClient | null;
+	getWallet: () => Wallet | null;
+	extraInfo: () => Record<string, string | number> | null;
+	networkPing: () => Promise<void>;
+	networkStatus: () => boolean;
+	mirrorAccountInfo: () => MirrorAccountInfo | null;
+}
+
 export const walletstores = (() => {
 	const initWalletStores = () => {
 		return {
@@ -53,9 +65,9 @@ export const walletstores = (() => {
 		set,
 		update,
 
-		publicKey() {
+		publicKey(ind: number) {
 			subscribe((state) => {
-				return state.client?.getPublicKey() ?? null;
+				return state.wallet?.getPublicKey(ind) ?? null;
 			});
 		},
 
@@ -74,6 +86,12 @@ export const walletstores = (() => {
 		getClient() {
 			subscribe((state) => {
 				return state.client;
+			});
+		},
+
+		getWallet() {
+			subscribe((state) => {
+				return state.wallet;
 			});
 		},
 
