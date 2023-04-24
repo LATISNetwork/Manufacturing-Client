@@ -1,9 +1,10 @@
 import type { PrivateKey, AccountId, PublicKey } from '@hashgraph/sdk';
-import type { BigNumber } from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 import type { Wallet } from './ledgerabstract';
 import type { AccountBalance, MirrorAccountInfo, SimpleHederaClient } from './hedera';
 import { writable } from 'svelte/store';
+import { PrivateKeySoftwareWallet } from "./software-private-key";
 declare const __TEST__: boolean;
 interface State {
 	network: 'mainnet' | 'testnet' | 'previewnet';
@@ -38,6 +39,7 @@ interface storeMethods {
 	accountId: () => AccountId | null;
 	getClient: () => SimpleHederaClient | null;
 	getWallet: () => Wallet | null;
+	getNetwork: () => 'mainnet' | 'testnet' | 'previewnet';
 	extraInfo: () => Record<string, string | number> | null;
 	networkPing: () => Promise<void>;
 	networkStatus: () => boolean;
@@ -59,7 +61,7 @@ export const walletstores = (() => {
 		};
 	};
 	const store = writable(initWalletStores());
-	const { subscribe, set, update } = store;
+	const { subscribe, set, update} = store;
 	return {
 		subscribe,
 		set,
@@ -78,28 +80,56 @@ export const walletstores = (() => {
 		},
 
 		accountId() {
+			let accountId;
 			subscribe((state) => {
-				return state.client?.getAccountId() ?? null;
-			});
+				accountId = state.client?.getAccountId() ?? null;
+			})();
+			set(initWalletStores());
+			return accountId;
 		},
 
 		getClient() {
+			let client;
 			subscribe((state) => {
-				return state.client;
-			});
+				client = state.client;
+			})();
+			set(initWalletStores());
+			return client;
 		},
 
 		getWallet() {
+			let wallet;
 			subscribe((state) => {
-				return state.wallet;
-			});
+				wallet = state.wallet;
+			})();
+			set(initWalletStores());
+			return wallet;
 		},
 
 		extraInfo() {
+			let extraInfo;
 			subscribe((state) => {
-				return state.extraTxInfo;
-			});
+				extraInfo = state.extraTxInfo;
+			})();
+			set(initWalletStores());
+			return extraInfo;
 		},
+		getNetwork() {
+			let network; // declare a variable to store the network value
+			subscribe((currentState) => {
+				network = currentState.network; // set the network variable to the current network value
+			})();
+			set(initWalletStores()); // reset the store to its initial value to unsubscribe from updates
+			return network; 
+		  },
+		// async login(privateKey: string, accountIdStr: string) : Promise<void> {
+		// 	if (__TEST__) {
+		// 		const {PrivateKey, AccountId} = await import('@hashgraph/sdk');
+		// 	}
+		// 	const key = PrivateKey.fromString(privateKey);
+		// 	const accountId = AccountId.fromString(accountIdStr);
+		// 	const wallet = new PrivateKeySoftwareWallet(key);
+		// },
 
 		async networkPing() {
 			const { AccountBalanceQuery, AccountId } = await import('@hashgraph/sdk');

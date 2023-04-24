@@ -5,6 +5,7 @@
   // import connected from "./Ledger.svelte";
   import wallet from "./Ledger.svelte";
   import Ledger from "./Ledger.svelte";
+  // import  
 
   import {
     AccountId,
@@ -21,6 +22,7 @@
   } from "@hashgraph/sdk";
 
   import fs from "fs";
+  import type { SimpleHederaClient } from "./hedera";
 
   export let updateVersion = "";
   export let device = "";
@@ -61,7 +63,7 @@
     ledgerWallet = store.wallet;
   });
 
-  let client: Client;
+  let client;
   const unsubscribeClient = walletstores.subscribe((store) => {
     client = store.client;
   });
@@ -83,9 +85,9 @@
       .setGas(1000000)
       .setConstructorParameters(new ContractFunctionParameters());
     const manufacturerContractInstantiateSubmit =
-      await manufacturerContractInstantiateTx.executeWithSigner(signer);
+      await manufacturerContractInstantiateTx.execute(client);
     const manufacturerContractInstantiateRx =
-      await manufacturerContractInstantiateSubmit.getReceiptWithSigner(signer);
+      await manufacturerContractInstantiateSubmit.getReceipt(client);
     const manufacturerContractId = manufacturerContractInstantiateRx.contractId;
     console.log(
       `- The manufacturer smart contract ID is: ${manufacturerContractId} \n`

@@ -3,6 +3,10 @@
   import { onMount } from "svelte";
   import { walletstores } from "./wallet-stores";
   import { LedgerHardwareWallet } from "./hardware-ledger";
+  import { Client, AccountId, PublicKey } from "@hashgraph/sdk";
+  import type { SimpleHederaClient } from "./hedera";
+  import { HederaServiceImpl } from "../hederaclient";
+  import { accountId } from "../stores/wallet";
 
   let busy = false;
   let error = "";
@@ -27,13 +31,20 @@
 
     try {
       const wallet = await new LedgerHardwareWallet();
-
+      const hederaService = new HederaServiceImpl();
+      const client: SimpleHederaClient = await hederaService.createClient({
+        wallet: wallet,
+        network: "mainnet",
+        keyIndex: 0,
+        accountId: accountId
+      });
       await walletstores.setWallet(wallet);
+      await walletstores.setClient(client);
+      // const client: Client =
       console.log("Connected to Ledger");
-      console.log(wallet);
 
-    //   const pubKey = await wallet.getPublicKey(0);
-    //   console.log("pubKey: ", pubKey);
+      //   const pubKey = await wallet.getPublicKey(0);
+      //   console.log("pubKey: ", pubKey);
 
       sessionStorage.setItem("store", JSON.stringify(walletstores));
     } catch (e: any) {
@@ -46,9 +57,6 @@
       disabled = false;
     }
   };
-
-  
-
 
   onMount(() => {
     isWebUSBSupported().then((supported) => {

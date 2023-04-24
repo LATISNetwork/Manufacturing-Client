@@ -1,4 +1,5 @@
 import type { BigNumber } from 'bignumber.js';
+import { BigNumber as BigNum } from 'bignumber.js';
 import type { AccountId, FileId, PrivateKey, PublicKey, TokenId, TokenInfo } from '@hashgraph/sdk';
 
 import type { Wallet } from './ledgerabstract';
@@ -9,7 +10,7 @@ export interface SimpleTransfer {
 	asset?: string;
 	to?: AccountId;
 	// amount must be in low denom
-	amount?: BigNumber.Instance;
+	amount?: BigNum.Instance;
 }
 
 export interface AccountBalance {
