@@ -3,10 +3,16 @@
   import { onMount } from "svelte";
   import { walletstores } from "./wallet-stores";
   import { LedgerHardwareWallet } from "./hardware-ledger";
-  import { Client, AccountId, PublicKey } from "@hashgraph/sdk";
-  import type { SimpleHederaClient } from "./hedera";
+  import type { AccountId, PublicKey } from "@hashgraph/sdk";
+  import {
+    Client,
+    ContractCreateFlow,
+    FileCreateTransaction,
+  } from "@hashgraph/sdk";
+  // import type { SimpleHederaClient } from "./hedera";
   import { HederaServiceImpl } from "../hederaclient";
-  import { accountId } from "../stores/wallet";
+  import { lookUpContract, manufacturerAccountId, manufacturerPrivateKey, manufacturerPublicKey } from "../stores/wallet";
+  import { HashconnectService } from "./hashpack";
 
   let busy = false;
   let error = "";
@@ -31,22 +37,21 @@
 
     try {
       const wallet = await new LedgerHardwareWallet();
-      const hederaService = new HederaServiceImpl();
-      const client: SimpleHederaClient = await hederaService.createClient({
-        wallet: wallet,
-        network: "mainnet",
-        keyIndex: 0,
-        accountId: accountId
-      });
+      // const hederaService = new HederaServiceImpl();
+      // const client: Client = await hederaService.createClient({
+      //   wallet: wallet,
+      //   network: "mainnet",
+      //   keyIndex: 0,
+      //   accountId: accountId,
+      // });
       await walletstores.setWallet(wallet);
-      await walletstores.setClient(client);
-      // const client: Client =
+      // await walletstores.setClient(client);
       console.log("Connected to Ledger");
 
       //   const pubKey = await wallet.getPublicKey(0);
       //   console.log("pubKey: ", pubKey);
 
-      sessionStorage.setItem("store", JSON.stringify(walletstores));
+      // sessionStorage.setItem("store", JSON.stringify(walletstores));
     } catch (e: any) {
       // Bad practice <- Lazy Forrest
       error = e.message;
@@ -56,6 +61,33 @@
       busy = false;
       disabled = false;
     }
+
+    // let client = await new HashconnectService();
+    // await client.setUpHashConnectEvents();
+    // await client.connectToExtension();
+    // console.log("Some success connecting to extension");
+
+    const MANUFACTURER = Client.forTestnet().setOperator(
+      manufacturingAccountId,
+      manufacturingPublicKey
+    );
+
+    const contractByteCode = await Buffer.from(lookUpContract);
+    const manufacturerContractInstantiateTx = new ContractCreateFlow()
+      .setBytecode(contractByteCode)
+      .setGas(1000000);
+    // const response = await new FileCreateTransaction()
+    //   .setKeys([client.operatorPublicKey])
+    //   .setMaxTransactionFee(1000)
+    //   .execute(client);
+
+    // const id = await (await response.getReceipt(client)).fileId;
+    // console.log("FileCreateTransaction response: ", response);
+    // console.log("FileCreateTransaction id: ", id);
+    // .setConstructorParameters(new ContractFunctionParameters());
+    console.log("No error creating transaction");
+    const manufacturerContractInstantiateSubmit =
+      await manufacturerContractInstantiateTx.execute(client);
   };
 
   onMount(() => {

@@ -46,6 +46,10 @@ export class SimpleHederaClientImpl implements SimpleHederaClient {
     return this._client.operatorPublicKey!;
   }
 
+  getClient(): Client {
+    return this._client;
+  }
+
   getAccountId(): AccountId {
     /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
     return this._client.operatorAccountId!;

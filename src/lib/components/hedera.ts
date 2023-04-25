@@ -1,6 +1,6 @@
 import type { BigNumber } from 'bignumber.js';
 import { BigNumber as BigNum } from 'bignumber.js';
-import type { AccountId, FileId, PrivateKey, PublicKey, TokenId, TokenInfo } from '@hashgraph/sdk';
+import type { AccountId, FileId, PrivateKey, PublicKey, TokenId, TokenInfo, Client } from '@hashgraph/sdk';
 
 import type { Wallet } from './ledgerabstract';
 import type { CryptoTransfer } from './cryptotransfer';
@@ -39,7 +39,7 @@ export interface HederaService {
 		keyIndex: number;
 		// account ID we wish to associate with the wallet
 		accountId: AccountId;
-	}): Promise<SimpleHederaClient | null>;
+	}): Promise<Client | null>;
 
 	getMirrorAccountInfo(
 		network: 'mainnet' | 'testnet' | 'previewnet',

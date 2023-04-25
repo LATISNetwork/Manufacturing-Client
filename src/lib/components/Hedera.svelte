@@ -5,7 +5,8 @@
   // import connected from "./Ledger.svelte";
   import wallet from "./Ledger.svelte";
   import Ledger from "./Ledger.svelte";
-  // import  
+  import { lookUpContract } from "../stores/wallet";
+  // import
 
   import {
     AccountId,
@@ -63,7 +64,7 @@
     ledgerWallet = store.wallet;
   });
 
-  let client;
+  let client: Client;
   const unsubscribeClient = walletstores.subscribe((store) => {
     client = store.client;
   });
@@ -75,17 +76,16 @@
     console.log(updateVersion);
     const pubKey = ledgerWallet.getPublicKey(0);
     console.log(pubKey);
-    const signer = ledgerWallet.getTransactionSigner(0);
     // Test Contract <- Not actual contract
-    const contractByteCode = fs.readFileSync(
-      "../SmartContracts/LookupContract_sol_LookupContract.bin"
-    );
+    const contractByteCode = await Buffer.from(lookUpContract);
     const manufacturerContractInstantiateTx = new ContractCreateFlow()
       .setBytecode(contractByteCode)
-      .setGas(1000000)
-      .setConstructorParameters(new ContractFunctionParameters());
+      .setGas(1000000);
+      // .setConstructorParameters(new ContractFunctionParameters());
+    console.log("No error creating transaction");
     const manufacturerContractInstantiateSubmit =
       await manufacturerContractInstantiateTx.execute(client);
+    console.log("No error executing transaction");
     const manufacturerContractInstantiateRx =
       await manufacturerContractInstantiateSubmit.getReceipt(client);
     const manufacturerContractId = manufacturerContractInstantiateRx.contractId;

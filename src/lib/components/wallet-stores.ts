@@ -1,4 +1,4 @@
-import type { PrivateKey, AccountId, PublicKey } from '@hashgraph/sdk';
+import type { PrivateKey, AccountId, PublicKey, Client } from '@hashgraph/sdk';
 import { BigNumber } from 'bignumber.js';
 
 import type { Wallet } from './ledgerabstract';
@@ -12,11 +12,11 @@ interface State {
 	wallet: Wallet | null;
 	// the specific instantiation of a client
 	// from the unlocked wallet that is being used
-	client: SimpleHederaClient | null;
+	client: Client | null;
 	// the balance of the account associated with the client
 	balance: AccountBalance | null;
 	// the current price of HBARS in USD
-	hbarPriceUsd: BigNumber.Instance | null;
+	// hbarPriceUsd: BigNumber.Instance | null;
 	// a place to stuff extra information needed to process a transaction
 	extraTxInfo: Record<string, string | number> | null;
 	// is there an open prompt for the user on their hardware wallet
@@ -35,9 +35,9 @@ interface TransportStatusError extends Error {
 
 interface storeMethods {
 	publicKey: (ind: number) => PublicKey | null;
-	privateKey: () => PrivateKey | null;
-	accountId: () => AccountId | null;
-	getClient: () => SimpleHederaClient | null;
+	// privateKey: () => PrivateKey | null;
+	// accountId: () => AccountId | null;
+	getClient: () => Client | null;
 	getWallet: () => Wallet | null;
 	getNetwork: () => 'mainnet' | 'testnet' | 'previewnet';
 	extraInfo: () => Record<string, string | number> | null;
@@ -51,9 +51,9 @@ export const walletstores = (() => {
 		return {
 			network: 'mainnet' as 'mainnet' | 'testnet' | 'previewnet',
 			wallet: null as Wallet | null,
-			client: null as SimpleHederaClient | null,
+			client: null as Client | null,
 			balance: null as AccountBalance | null,
-			hbarPriceUsd: null as BigNumber.Instance | null,
+			// hbarPriceUsd: null as BigNumber.Instance | null,
 			extraTxInfo: null as Record<string, string | number> | null,
 			prompt: false as boolean,
 			logoutConfirm: false as boolean,
@@ -73,20 +73,20 @@ export const walletstores = (() => {
 			});
 		},
 
-		privateKey() {
-			subscribe((state) => {
-				return state.client?.getPrivateKey() ?? null;
-			});
-		},
+		// privateKey() {
+		// 	subscribe((state) => {
+		// 		return state.client?.getPrivateKey() ?? null;
+		// 	});
+		// },
 
-		accountId() {
-			let accountId;
-			subscribe((state) => {
-				accountId = state.client?.getAccountId() ?? null;
-			})();
-			set(initWalletStores());
-			return accountId;
-		},
+		// accountId() {
+		// 	let accountId;
+		// 	subscribe((state) => {
+		// 		accountId = state.client?.getAccountId() ?? null;
+		// 	})();
+		// 	set(initWalletStores());
+		// 	return accountId;
+		// },
 
 		getClient() {
 			let client;
@@ -167,18 +167,18 @@ export const walletstores = (() => {
 			})
 		},
 
-		setClient(client: SimpleHederaClient | null) {
+		setClient(client: Client | null) {
 			update((state) => {
 				state.client = client;
 				return state;
 			})
 		},
 
-		async requestAccountBalance() {
-			subscribe(async (state) => {
-				await state.client?.getAccountBalance();
-			})
-		},
+		// async requestAccountBalance() {
+		// 	subscribe(async (state) => {
+		// 		await state.client?.getAccountBalance();
+		// 	})
+		// },
 
 		setExtraInfo(info: Record<string, string | number>): void {
 			update((state) => {

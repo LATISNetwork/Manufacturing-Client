@@ -20,7 +20,7 @@ export class HederaServiceImpl implements HederaService {
               };
         keyIndex: number;
         accountId: AccountId;
-    }): Promise<SimpleHederaClient | null> {
+    }): Promise<Client | null> {
         const { Client, AccountId } = await import("@hashgraph/sdk");
 
         let client;
@@ -31,6 +31,7 @@ export class HederaServiceImpl implements HederaService {
                 client = Client.forNetwork({
                     "https://node01-00-grpc.swirlds.com:443": new AccountId(4),
                 });
+                // client = Client.forMainnet();
             } else {
                 // HACK: the NetworkName type is not exported
                 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -54,7 +55,7 @@ export class HederaServiceImpl implements HederaService {
             return null;
         }
 
-        // TODO: Fix
+        // TODO: Fix <- What does this mean?
         client.setOperatorWith(
             options.accountId,
             publicKey ?? "",
@@ -65,7 +66,7 @@ export class HederaServiceImpl implements HederaService {
             return null;
         }
 
-        return new SimpleHederaClientImpl(client, privateKey);
+        return client;
     }
 
     
@@ -129,6 +130,5 @@ async function testClientOperatorMatch(client: Client) {
     // under *no* cirumstances should this transaction succeed
     throw new Error(
         "unexpected success of intentionally-erroneous transaction to confirm account ID"
-        
     );
 }
