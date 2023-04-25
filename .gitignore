@@ -4,3 +4,4 @@
 .DS_Store
 /src/lib/stores/*
 src\lib\stores\wallet.ts
+src/lib/stores/wallet.ts

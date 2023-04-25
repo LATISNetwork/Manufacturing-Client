@@ -5,7 +5,7 @@ import { AccountId } from '@hashgraph/sdk';
 export const walletstore = walletstores;
 
 export const manufacturerAccountId = AccountId.fromString("0.0.2178683"); //replace with actual account id
-export const manufacturerPublicKey = "test";
+export const manufacturerPublicKey = "te";
 export const manufacturerPrivateKey = "";
 
 
