@@ -2,4 +2,4 @@
 /public/build/
 
 .DS_Store
-/src/lib/stores/wallet.ts
+/src/lib/stores/
