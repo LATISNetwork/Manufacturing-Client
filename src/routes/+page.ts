@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 import { walletstores } from '$lib/components/wallet-stores';
 import {componentType, loggedIn, ComponentType} from '$lib/stores/stores';
 export const load = (async ({ fetch }) => {
-	componentType.set(ComponentType.LOGIN); // Change back to ledger
+	componentType.set(ComponentType.LEDGER); // Change back to ledger
 	loggedIn.set(false);
 
 	// walletstores.subscribe((wallets) => {
