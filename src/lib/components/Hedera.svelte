@@ -1,5 +1,6 @@
 <script lang="ts">
   import { LedgerHardwareWallet } from "./hardware-ledger";
+  import { toast, SvelteToast } from "@zerodevx/svelte-toast";
   import type { Wallet } from "./ledgerabstract";
   import { walletstores } from "./wallet-stores";
   // import connected from "./Ledger.svelte";
@@ -43,6 +44,12 @@
   let deviceTypeList: any[] = [];
   let versionList: any[] = [];
   let deviceList: any[] = [];
+
+  const app = new SvelteToast({
+    // Set where the toast container should be appended into
+    target: document.body,
+    props: {},
+  });
 
   const updateOEMList = async () => {
     const oemListTemp = await fetch("/api/get-oems", {
@@ -142,6 +149,43 @@
     await updateOEMList();
   });
 
+  const checkForUpdates = async () => {
+    const res = await fetch("api/query-updates", {
+      method: "POST",
+      body: JSON.stringify({ oem, deviceType, updateVersion }),
+    });
+    const resAwait = await res;
+    if (!resAwait.ok) {
+      error = resAwait.statusText;
+      return;
+    }
+    const responseJson = await res.json();
+    if (responseJson.error) {
+      error = responseJson.error;
+      return;
+    }
+    if (responseJson.newUpdate) {
+      console.log(responseJson);
+      toast.push(
+        "Update available from " +
+          responseJson.oemID +
+          " for " +
+          responseJson.deviceID +
+          " to version " +
+          responseJson.version +
+          "!"
+      );
+    }
+  };
+  const whileCheck = async () => {
+    while (true) {
+      await new Promise((r) => setTimeout(r, 5000));
+      await checkForUpdates();
+    }
+  };
+
+  whileCheck();
+
   const logout = async () => {
     // Clear cookies
     const signout_res = await fetch(`/api/signout`, {
@@ -182,6 +226,7 @@
     console.log(responseJson);
 
     if (oem == "LatisOEM") {
+      toast.push("Pushing update to device through Hedera");
       console.log("Pushing to Hedera");
       const contractFetchUpdateTx = new ContractExecuteTransaction()
         .setContractId(manufacturerContract)
@@ -206,105 +251,109 @@
   }
 </script>
 
-<button
-  on:click={logout}
-  class="m-4 border-emerald-500 border-2 rounded-md px-4 py-2 hover:bg-emerald-900 hover:bg-opacity-50 transition-all"
->
-  Log out
-</button>
-
-<div class="m-4 my-auto border-2 border-gray-600 rounded-md p-8">
-  <h1>Schedule an Update</h1>
-  <hr />
-  <label for="oem" class="mr-4">OEM:</label>
-  <select bind:value={oem} on:change={() => updateDeviceTypeList()}>
-    {#each oemList as o}
-      <option value={o}>
-        {o}
-      </option>
-    {/each}
-  </select>
-  <div class="mt-4">
-    <label for="device type" class="mr-4">Device Type:</label>
-    <select
-      bind:value={deviceType}
-      disabled={!oem}
-      on:change={() => updateVersionList()}
+<div class="m-4 bg-fuchsia-500 bg-opacity-10 rounded-lg shadow-md p-8 mb-8">
+  <div class="w-full flex flex-row justify-between align-middle my-4">
+    <h1 class="text-2xl text-fuchsia-300 font-bold">LATIS OEM Client</h1>
+    <button
+      on:click={logout}
+      class=" border-fuchsia-500 border-2 rounded-md px-4 py-2 w-1/12 hover:bg-fuchsia-900 hover:bg-opacity-50 transition-all"
     >
-      {#each deviceTypeList as d}
-        <option value={d}>
-          {d}
-        </option>
-      {/each}
-    </select>
-  </div>
-  <div class="mt-4">
-    <label for="version" class="mr-4">Version:</label>
-
-    <select
-      bind:value={updateVersion}
-      disabled={!deviceType || !oem}
-      on:change={() => updateDeviceList()}
-    >
-      {#each versionList as update}
-        <option value={update}>
-          {update}
-        </option>
-      {/each}
-    </select>
+      Log out
+    </button>
   </div>
 
-  <div class="mt-4">
-    <label for="device" class="mr-4">Device:</label>
+  <h1 class="text-xl mb-4">Schedule an Update</h1>
+  <div class="bg-fuchsia-500 bg-opacity-10 rounded-lg shadow-md p-8 w-1/2">
+    <div class=" flex flex-row justify-between">
+      <label for="oem" class="mr-4">OEM:</label>
+      <select
+        bind:value={oem}
+        on:change={() => updateDeviceTypeList()}
+        class="w-2/3 appearance-none bg-black bg-opacity-30 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 rounded-md p-4 placeholder:italic text-gray-300"
+      >
+        {#each oemList as o}
+          <option value={o} >
+            {o}
+          </option>
+        {/each}
+      </select>
+    </div>
 
-    <select
-      bind:value={deviceId}
-      disabled={!deviceType || !oem || !updateVersion}
+    <div class="mt-4 flex flex-row justify-between">
+      <label for="device type" class="mr-4">Device Type:</label>
+      <select
+        bind:value={deviceType}
+        disabled={!oem}
+        on:change={() => updateVersionList()}
+        class="w-2/3 appearance-none bg-black bg-opacity-30 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 rounded-md p-4 placeholder:italic text-gray-300"
+      >
+        {#each deviceTypeList as d}
+          <option value={d} >
+            {d}
+          </option>
+        {/each}
+      </select>
+    </div>
+    <div class="mt-4 flex flex-row justify-between">
+      <label for="version" class="mr-4">Version:</label>
+
+      <select
+        bind:value={updateVersion}
+        disabled={!deviceType || !oem}
+        on:change={() => updateDeviceList()}
+        class="w-2/3 appearance-none bg-black bg-opacity-30 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 rounded-md p-4 placeholder:italic text-gray-300"
+      >
+        {#each versionList as update}
+          <option value={update}>
+            {update}
+          </option>
+        {/each}
+      </select>
+    </div>
+
+    <div class="mt-4 flex flex-row justify-between">
+      <label for="device" class="mr-4">Device:</label>
+
+      <select
+        bind:value={deviceId}
+        disabled={!deviceType || !oem || !updateVersion}
+        class="w-2/3 appearance-none bg-black bg-opacity-30 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-400 rounded-md p-4 placeholder:italic text-gray-300"
+      >
+        {#each deviceList as device}
+          <option value={device}>
+            {device}
+          </option>
+        {/each}
+      </select>
+    </div>
+
+    <button
+      disabled={!oem || !updateVersion || !deviceType || !deviceId}
+      type="submit"
+      on:click={handleSubmit}
+      class="bg-fuchsia-600 mt-4 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-fuchsia-400 transition-all"
     >
-      {#each deviceList as device}
-        <option value={device}>
-          {device}
-        </option>
-      {/each}
-    </select>
+      Assign Update
+    </button>
   </div>
-
-  <button
-    disabled={!oem || !updateVersion || !deviceType || !deviceId}
-    type="submit"
-    on:click={handleSubmit}
-  >
-    Assign Update
-  </button>
 </div>
 
 <style>
-  input {
-    display: block;
-    width: 500px;
-    max-width: 100%;
-  }
-  select {
-    display: block;
-    width: 500px;
-    max-width: 100%;
-    background-color: black;
-  }
-  button {
-    display: block;
-    width: 500px;
-    max-width: 100%;
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin-top: 10px;
-  }
   /* When button is disabled */
-  button:disabled {
-    background-color: gray;
+  :disabled {
+    color: #9ca3af;
   }
-  h1 {
-    font-size: 1.5rem;
+  :root {
+    --toastBackground: rgb(0, 0, 0);
+    --toastColor: #ffffff;
+    --toastBarBackground: fuchsia;
+  }
+  option {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+  }
+  option::before {
+    content: attr(value) ":";
+    color: #ffffff;
   }
 </style>

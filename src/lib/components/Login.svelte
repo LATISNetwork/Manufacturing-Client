@@ -30,14 +30,14 @@
 </script>
 
 <div class="flex h-screen items-center justify-center w-full">
-	<div class="bg-emerald-500 bg-opacity-10 rounded-lg shadow-md p-8 w-1/4">
+	<div class="bg-fuchsia-500 bg-opacity-10 rounded-lg shadow-md p-8 w-1/4">
 		{#if !signingUp}
 			<h2 class="text-4xl font-bold mb-4 text-center">Login</h2>
 			<form>
 				<div class="mb-4">
 					<label class="block  font-bold mb-2" for="email">Email</label>
 					<input
-						class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+						class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 						id="email"
 						type="email"
 						placeholder="Enter your email"
@@ -47,7 +47,7 @@
 				<div class="mb-4">
 					<label class="block  font-bold mb-2" for="password">Password</label>
 					<input
-						class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+						class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 						id="password"
 						type="password"
 						placeholder="Enter your password"
@@ -55,7 +55,7 @@
 					/>
 				</div>
 				<button
-					class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
+					class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-fuchsia-400 transition-all"
 					type="submit"
 					on:click={login}
 				>

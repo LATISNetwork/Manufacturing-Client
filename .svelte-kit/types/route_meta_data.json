@@ -31,6 +31,9 @@
 	"/api/get-version": [
 		"src/routes/api/get-version/+server.ts"
 	],
+	"/api/query-updates": [
+		"src/routes/api/query-updates/+server.ts"
+	],
 	"/api/signout": [
 		"src/routes/api/signout/+server.ts"
 	],
