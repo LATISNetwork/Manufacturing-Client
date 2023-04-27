@@ -15,17 +15,21 @@
     Client,
     FileCreateTransaction,
     ContractCreateTransaction,
-    ContractFunctionParameters,
-    ContractExecuteTransaction,
     ContractCallQuery,
     Hbar,
     ContractCreateFlow,
     PublicKey,
+    ContractId,
+  } from "@hashgraph/sdk";
+
+  import {
+    ContractFunctionParameters,
+    ContractExecuteTransaction,
   } from "@hashgraph/sdk";
 
   import fs from "fs";
   import type { SimpleHederaClient } from "./hedera";
-  import { oemContract } from "../stores/wallet";
+  import { oemContract, manufacturerContract } from "../stores/wallet";
 
   export let updateVersion = "";
   export let deviceType = "";
@@ -162,6 +166,43 @@
     console.log(oem);
     console.log(deviceType);
     console.log(updateVersion);
+    console.log(deviceId);
+
+    const res = await fetch("api/assign-update", {
+      method: "POST",
+      body: JSON.stringify({ deviceId }),
+    });
+    const resAwait = await res;
+    if (!resAwait.ok) {
+      error = resAwait.statusText;
+      return;
+    }
+    console.log(res);
+    const responseJson = await res.json();
+    console.log(responseJson);
+
+    if (oem == "LatisOEM") {
+      console.log("Pushing to Hedera");
+      const contractFetchUpdateTx = new ContractExecuteTransaction()
+        .setContractId(manufacturerContract)
+        .setGas(1000000)
+        .setFunction(
+          "assignUpdate",
+          new ContractFunctionParameters()
+            .addAddress(deviceId)
+            .addString(oem)
+            .addString(deviceType)
+            .addString(updateVersion)
+        );
+      const contractFetchUpdateSubmit = await contractFetchUpdateTx.execute(
+        client
+      );
+      const contractFetchUpdateRx = await contractFetchUpdateSubmit.getReceipt(
+        client
+      ); // Commenting this one line smh causes things to fail unsure how
+      console.log("- Fetching update from middleman\n");
+      console.log(contractFetchUpdateRx);
+    }
   }
 </script>
 

@@ -10,6 +10,9 @@
 	"/api/add-update": [
 		"src/routes/api/add-update/+server.ts"
 	],
+	"/api/assign-update": [
+		"src/routes/api/assign-update/+server.ts"
+	],
 	"/api/auth": [
 		"src/routes/api/auth/+server.ts"
 	],
