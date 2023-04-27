@@ -18,7 +18,7 @@
 	});
 </script>
 
-<main class="text-lg">
+<main class="text-md">
 	{#if $componentType === ComponentType.LEDGER}
 		<Ledger />
 	{:else if $componentType === ComponentType.LOGIN}

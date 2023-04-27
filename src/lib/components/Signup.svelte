@@ -71,7 +71,7 @@
 	<div class="mb-4">
 		<label class="block  font-bold mb-2" for="email">Email</label>
 		<input
-			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 			id="email"
 			type="email"
 			placeholder="Enter your email"
@@ -81,7 +81,7 @@
 	<div class="mb-4">
 		<label class="block  font-bold mb-2" for="email">Manufacturer ID</label>
 		<input
-			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 			type="text"
 			placeholder="Ex. 0.0.2341234"
 			bind:value={manuID}
@@ -91,7 +91,7 @@
 	<div class="mb-4">
 		<label class="block  font-bold mb-2" for="password">Password</label>
 		<input
-			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 			id="password"
 			type="password"
 			placeholder="Enter your password"
@@ -102,7 +102,7 @@
 	<div class="mb-4">
 		<label class="block  font-bold mb-2" for="password">Confirm Password</label>
 		<input
-			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-black bg-opacity-30 border-emerald-500"
+			class="border rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-fuchsia-400 bg-black bg-opacity-30 border-fuchsia-500"
 			id="password2"
 			type="password"
 			placeholder="Enter your password"
@@ -110,7 +110,7 @@
 		/>
 	</div>
 	<button
-		class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
+		class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-fuchsia-400 transition-all"
 		type="submit"
 		on:click={signup}
 	>

@@ -91,8 +91,8 @@
 <div
   class="flex flex-col justify-center items-center h-screen gap-y-2 text-center"
 >
-  <h1 class="text-5xl text-emerald-200 font-bold">LATIS</h1>
-  <h1 class="text-emerald-400 mb-8">
+  <h1 class="text-5xl text-fuchsia-200 font-bold">LATIS</h1>
+  <h1 class="text-fuchsia-400 mb-8">
     Secure your device updates, decentralized and trusted.
   </h1>
   <button
