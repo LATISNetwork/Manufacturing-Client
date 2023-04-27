@@ -8,3 +8,6 @@ src/lib/stores/wallet.ts
 src/lib/stores/wallet.ts
 */wallet.ts
 wallet.ts
+
+config.ts
+firebase-admin.json
