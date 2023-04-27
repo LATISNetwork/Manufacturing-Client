@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js';
 import type { Wallet } from './ledgerabstract';
 import type { AccountBalance, MirrorAccountInfo, SimpleHederaClient } from './hedera';
 import { writable } from 'svelte/store';
-import { PrivateKeySoftwareWallet } from "./software-private-key";
+
 declare const __TEST__: boolean;
 interface State {
 	network: 'mainnet' | 'testnet' | 'previewnet';
