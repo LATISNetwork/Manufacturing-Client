@@ -1,10 +1,37 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
-  "compilerOptions":{
-    "target": "es6",
-    "module": "esnext"
-  },
+	"extends": "./.svelte-kit/tsconfig.json",
+	"typeRoots": ["node_modules/@types"],
+	"compilerOptions": {
+		"module": "esnext",
+		"target": "es2020",
+		"moduleResolution": "node",
+		"types": ["vite/client", "node"],
 
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+		"lib": ["dom", "ESNext"],
+		/**
+			svelte-preprocess cannot figure out whether you have a value or a type, so tell TypeScript
+			to enforce using \`import type\` instead of \`import\` for Types.
+		*/
+		"importsNotUsedAsValues": "error",
+		"isolatedModules": true,
+		/**
+			To have warnings/errors of the Svelte compiler at the correct position,
+			enable source maps by default.
+		*/
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true
+		// "paths": {
+		// 	"$lib": ["src/lib"],
+		// 	"$lib/*": ["src/lib/*"],
+		// 	"$app/*": [".svelte/dev/runtime/app/*", ".svelte/build/runtime/app/*"]
+		// }
+	},
+	"files": ["node_modules/@types/w3c-web-usb/index.d.ts"],
+	"include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.svelte"]
 }

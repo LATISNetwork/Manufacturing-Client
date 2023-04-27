@@ -4,15 +4,23 @@
   import { walletstores } from "./wallet-stores";
   import { LedgerHardwareWallet } from "./hardware-ledger";
   import type { AccountId, PublicKey } from "@hashgraph/sdk";
+  import { componentType, loggedIn, ComponentType, pubKey } from '$lib/stores/stores';
   import {
     Client,
     ContractCreateFlow,
     FileCreateTransaction,
+    ContractFunctionParameters,
   } from "@hashgraph/sdk";
   // import type { SimpleHederaClient } from "./hedera";
   import { HederaServiceImpl } from "../hederaclient";
-  import { lookUpContract, manufacturerAccountId, manufacturerPrivateKey, manufacturerPublicKey } from "../stores/wallet";
-  import { HashconnectService } from "./hashpack";
+  import {
+    manufacturerAccountId,
+    manufacturerPrivateKey,
+    manufacturerPublicKey,
+    manufacturerContract,
+    oemContract,
+  } from "../stores/wallet";
+  // import { HashconnectService } from "./hashpack";
 
   let busy = false;
   let error = "";
@@ -37,21 +45,17 @@
 
     try {
       const wallet = await new LedgerHardwareWallet();
-      // const hederaService = new HederaServiceImpl();
-      // const client: Client = await hederaService.createClient({
-      //   wallet: wallet,
-      //   network: "mainnet",
-      //   keyIndex: 0,
-      //   accountId: accountId,
-      // });
-      await walletstores.setWallet(wallet);
-      // await walletstores.setClient(client);
+
+      const store = walletstores;
+      await store.setWallet(wallet);
       console.log("Connected to Ledger");
+      console.log(wallet);
 
-      //   const pubKey = await wallet.getPublicKey(0);
-      //   console.log("pubKey: ", pubKey);
-
-      // sessionStorage.setItem("store", JSON.stringify(walletstores));
+      const pubKeyL = await wallet.getPublicKey(0).then(() => {
+        console.log("connected to ledger!!!!");
+        $componentType = ComponentType.LOGIN;
+      });
+      console.log("pubKey: ", pubKeyL);
     } catch (e: any) {
       // Bad practice <- Lazy Forrest
       error = e.message;
@@ -62,32 +66,12 @@
       disabled = false;
     }
 
-    // let client = await new HashconnectService();
-    // await client.setUpHashConnectEvents();
-    // await client.connectToExtension();
-    // console.log("Some success connecting to extension");
-
     const MANUFACTURER = Client.forTestnet().setOperator(
-      manufacturingAccountId,
-      manufacturingPublicKey
+      manufacturerAccountId,
+      manufacturerPrivateKey
     );
 
-    const contractByteCode = await Buffer.from(lookUpContract);
-    const manufacturerContractInstantiateTx = new ContractCreateFlow()
-      .setBytecode(contractByteCode)
-      .setGas(1000000);
-    // const response = await new FileCreateTransaction()
-    //   .setKeys([client.operatorPublicKey])
-    //   .setMaxTransactionFee(1000)
-    //   .execute(client);
-
-    // const id = await (await response.getReceipt(client)).fileId;
-    // console.log("FileCreateTransaction response: ", response);
-    // console.log("FileCreateTransaction id: ", id);
-    // .setConstructorParameters(new ContractFunctionParameters());
-    console.log("No error creating transaction");
-    const manufacturerContractInstantiateSubmit =
-      await manufacturerContractInstantiateTx.execute(client);
+    await walletstores.setClient(MANUFACTURER);
   };
 
   onMount(() => {
@@ -104,27 +88,18 @@
   });
 </script>
 
-<div>
-  <button on:click={handleConnect}> Connect </button>
+<div
+  class="flex flex-col justify-center items-center h-screen gap-y-2 text-center"
+>
+  <h1 class="text-5xl text-emerald-200 font-bold">LATIS</h1>
+  <h1 class="text-emerald-400 mb-8">
+    Secure your device updates, decentralized and trusted.
+  </h1>
+  <button
+    on:click={handleConnect}
+    class="border-2 border-solid border-white rounded-full py-2 px-8 text-white font-bold text-xl bg-black hover:animate-pulse bg-opacity-10"
+  >
+    Connect Your Hardware Wallet
+  </button>
+  <h1 class="text-gray-400">powered by the Hedera Network</h1>
 </div>
-
-<style>
-  button {
-    background-color: #4caf50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 8px 2px;
-    cursor: pointer;
-    /* round corners */
-    border-radius: 8px;
-    /* Center on page */
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-  }
-</style>

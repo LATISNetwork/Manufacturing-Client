@@ -1,23 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import "../app.css";
+	import '../app.css';
 	let ready: boolean = false;
-	import "../shims-buffer";
+	import '../shims-buffer';
 	onMount(() => (ready = true));
 </script>
 
-<div class="dragbar" />
-
 {#if ready}
 	<slot />
+		<div
+			class=" w-screen h-screen inset-0 top-0 bottom-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900 via-gray-900 to-black -z-10 fixed"
+		/>
 {/if}
-
-<style>
-	.dragbar {
-		-webkit-app-region: drag;
-		position: absolute;
-		z-index: 100;
-		height: 40px;
-		width: 100%;
-	}
-</style>

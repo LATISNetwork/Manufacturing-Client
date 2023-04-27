@@ -1,6 +1,40 @@
 {
 	"/": [
-		"src/routes/+layout.js",
-		"src/routes/+layout.js"
+		"src/routes/+page.ts",
+		"src/routes/+layout.ts",
+		"src/routes/+layout.ts"
+	],
+	"/api/add-manu": [
+		"src/routes/api/add-manu/+server.ts"
+	],
+	"/api/add-update": [
+		"src/routes/api/add-update/+server.ts"
+	],
+	"/api/auth": [
+		"src/routes/api/auth/+server.ts"
+	],
+	"/api/get-deviceTypes": [
+		"src/routes/api/get-deviceTypes/+server.ts"
+	],
+	"/api/get-devices": [
+		"src/routes/api/get-devices/+server.ts"
+	],
+	"/api/get-oems": [
+		"src/routes/api/get-oems/+server.ts"
+	],
+	"/api/get-user-data": [
+		"src/routes/api/get-user-data/+server.ts"
+	],
+	"/api/get-version": [
+		"src/routes/api/get-version/+server.ts"
+	],
+	"/api/signout": [
+		"src/routes/api/signout/+server.ts"
+	],
+	"/api/signup": [
+		"src/routes/api/signup/+server.ts"
+	],
+	"/api/upload": [
+		"src/routes/api/upload/+server.ts"
 	]
 }

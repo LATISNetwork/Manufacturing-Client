@@ -1,2 +1,21 @@
+import { dev } from '$app/environment';
 
-export {};
+export const ESTUARY_KEY_DEMO = 'ESTdbbb7b5f-844f-4028-b13f-500fae97973fARY';
+export const OEM_ACCOUNT_ID = '0.0.3713296';
+export const OEM_PRIV_KEY =
+	'3030020100300706052b8104000a042204207c28c85e3f5a24381e086b3c01d6abb42fd9c8d10fc461f5fcb4db9508dabbc4';
+
+export const MANU_ACCOUNT_ID = '0.0.3833437';
+export const MANU_PRIV_KEY =
+	'3030020100300706052b8104000a04220420d383a44ff54c9662a36557caf7a743064849d10adedd962717b2a392c257e854';
+
+export const DEVICE_ACCOUNT_ID = '0.0.3832192';
+export const DEVICE_PRIV_KEY =
+	'3030020100300706052b8104000a04220420b99dcb922f942096c6bfaf790948e3c711e7056264e763c0a43dadb6ede997be';
+
+export const OEM_CONTRACT = '0.0.4408618';
+export const MANU_CONTRACT = '0.0.4408608';
+
+export const WEB_API_KEY="AIzaSyDXgj4JOo6_OcA7UHRjLCK5byfMX58efNw";
+
+export const DEV = true;

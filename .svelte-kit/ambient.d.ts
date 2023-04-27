@@ -41,7 +41,7 @@ declare module '$env/static/private' {
 	export const DESKTOP_CONNECTOR_DIR: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_11240: string;
+	export const EFC_11000: string;
 	export const FORCE_COLOR: string;
 	export const FPS_BROWSER_APP_PROFILE_STRING: string;
 	export const FPS_BROWSER_USER_PROFILE_STRING: string;
@@ -164,7 +164,7 @@ declare module '$env/dynamic/private' {
 		DESKTOP_CONNECTOR_DIR: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_11240: string;
+		EFC_11000: string;
 		FORCE_COLOR: string;
 		FPS_BROWSER_APP_PROFILE_STRING: string;
 		FPS_BROWSER_USER_PROFILE_STRING: string;

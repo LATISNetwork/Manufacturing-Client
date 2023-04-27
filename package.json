@@ -52,6 +52,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@hashgraph/hethers": "^1.2.6",
     "@hashgraph/sdk": "^2.19.2",
+    "@iconify/svelte": "^3.1.3",
     "@ledgerhq/hw-transport": "^6.28.1",
     "@ledgerhq/hw-transport-node-hid": "^6.27.12",
     "@ledgerhq/hw-transport-webhid": "^6.27.12",
@@ -68,9 +69,11 @@
     "electron-reloader": "^1.2.3",
     "electron-serve": "^1.1.0",
     "electron-window-state": "^5.0.3",
+    "firebase-admin": "^11.7.0",
     "form-data": "^4.0.0",
     "formidable": "^2.1.1",
     "hashconnect": "^0.2.4",
-    "sirv-cli": "^2.0.0"
+    "sirv-cli": "^2.0.0",
+    "types": "^0.1.1"
   }
 }
