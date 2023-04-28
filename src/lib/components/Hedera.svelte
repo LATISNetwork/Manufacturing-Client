@@ -253,7 +253,7 @@
 
 <div class="m-4 bg-fuchsia-500 bg-opacity-10 rounded-lg shadow-md p-8 mb-8">
   <div class="w-full flex flex-row justify-between align-middle my-4">
-    <h1 class="text-2xl text-fuchsia-300 font-bold">LATIS OEM Client</h1>
+    <h1 class="text-2xl text-fuchsia-300 font-bold">LATIS Manufacturer Client</h1>
     <button
       on:click={logout}
       class=" border-fuchsia-500 border-2 rounded-md px-4 py-2 w-1/12 hover:bg-fuchsia-900 hover:bg-opacity-50 transition-all"
